@@ -30,7 +30,6 @@ function ProfilePage({ userId }) {
       <p>Name: {profile.name}</p>
       <p>Email: {profile.email}</p>
       <p>Role: {profile.role}</p>
-      <p>Class: </p>
     </div>
   );
 }
