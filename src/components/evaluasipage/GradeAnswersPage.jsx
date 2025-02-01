@@ -15,7 +15,10 @@ function GradeAnswersPage() {
 
   const fetchQuestionDetails = async () => {
     try {
-      const response = await EvaluasiService.getExamQuestionById(questionId);
+      const token = localStorage.getItem('token')
+      const response = await EvaluasiService.getExamQuestionById(questionId, token);
+      // console.log(response);
+
       setQuestion(response);
     } catch (error) {
       console.error("Error fetching question details:", error);
@@ -24,7 +27,11 @@ function GradeAnswersPage() {
 
   const fetchAnswers = async () => {
     try {
-      const response = await EvaluasiService.getAnswersByQuestionId(questionId);
+      const token = localStorage.getItem('token')
+      
+      // console.log(token);
+      
+      const response = await EvaluasiService.getAnswersByQuestionId(questionId, token);
       setAnswers(response);
     } catch (error) {
       console.error("Error fetching answers:", error);
@@ -33,7 +40,8 @@ function GradeAnswersPage() {
 
   const gradeAnswer = async (answerId, isCorrect, marks) => {
     try {
-      await EvaluasiService.gradeAnswer(answerId, isCorrect, marks);
+      const token = localStorage.getItem('token')
+      await EvaluasiService.gradeAnswer(answerId, isCorrect, marks, token);
       alert("Answer graded successfully!");
       fetchAnswers();
     } catch (error) {
@@ -45,14 +53,15 @@ function GradeAnswersPage() {
   const handleBack = () => {
     navigate(-1); // Navigate back
   };
+  // console.log(answers);
 
   return (
     <div className="page-container">
       <h2>Grade Answers for Question: {question.examQuestion}</h2>
       <div className="add-button-container">
-      <button onClick={handleBack} className="back-button">
-        Back
-      </button>
+        <button onClick={handleBack} className="back-button">
+          Back
+        </button>
       </div>
       <table>
         <thead>
@@ -69,24 +78,24 @@ function GradeAnswersPage() {
           {answers.map((answer, index) => (
             <tr key={answer.id}>
               <td>{index + 1}</td>
-              <td>{answer.student?.id || "N/A"}</td>
+              <td>{answer.studentId || "N/A"}</td>
               <td>{answer.answer}</td>
               <td>{answer.marksObtained != null ? answer.marksObtained : "-"}</td>
               <td>{answer.isCorrect ? "Yes" : "No"}</td>
               <td>
-              <div className="actions-container">
-                <button 
-                className="grade-button correct"
-                onClick={() => gradeAnswer(answer.id, true, 10)}>
-                  Mark Correct (10 Marks)
-                </button>
+                <div className="actions-container">
+                  <button
+                    className="grade-button correct"
+                    onClick={() => gradeAnswer(answer.id, true, 10)}>
+                    Mark Correct (10 Marks)
+                  </button>
 
-                <button
-                className="grade-button incorrect"
-                onClick={() => gradeAnswer(answer.id, false, 0)}>
-                  Mark Incorrect (0 Marks)
-                </button>
-              </div>
+                  <button
+                    className="grade-button incorrect"
+                    onClick={() => gradeAnswer(answer.id, false, 0)}>
+                    Mark Incorrect (0 Marks)
+                  </button>
+                </div>
               </td>
             </tr>
           ))}

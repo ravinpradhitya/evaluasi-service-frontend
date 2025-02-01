@@ -12,7 +12,10 @@ function ProfilePage({ userId }) {
 
   const fetchProfile = async () => {
     try {
-      const response = await EvaluasiService.getUserProfile(userId);
+      const token = localStorage.getItem('token')
+      const response = await EvaluasiService.getUserProfile(userId, token);
+      console.log(response);
+      
       setProfile(response);
       setLoading(false);
     } catch (err) {
@@ -25,7 +28,7 @@ function ProfilePage({ userId }) {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="profile-container">
+    <div className="profile-page-container">
       <h2>Profile Information</h2>
       <p>Name: {profile.name}</p>
       <p>Email: {profile.email}</p>

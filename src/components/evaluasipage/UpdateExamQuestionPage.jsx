@@ -17,7 +17,8 @@ function UpdateExamQuestionPage() {
 
   const fetchQuestionDetails = async () => {
     try {
-      const response = await EvaluasiService.getExamQuestionById(questionId);
+      const token = localStorage.getItem('token')
+      const response = await EvaluasiService.getExamQuestionById(questionId, token);
       setQuestion(response);
     } catch (error) {
       console.error("Error fetching question details:", error);
@@ -32,7 +33,8 @@ function UpdateExamQuestionPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await EvaluasiService.updateExamQuestion(question);
+      const token = localStorage.getItem('token');
+      await EvaluasiService.updateExamQuestion(question, token);
       alert("Question updated successfully!");
       navigate(-1);
     } catch (error) {
@@ -62,13 +64,13 @@ function UpdateExamQuestionPage() {
         </div>
 
         <div className="form-buttons">
-        <button type="button" onClick={handleCancel}>
-          Cancel
-        </button>
+          <button type="button" onClick={handleCancel}>
+            Cancel
+          </button>
 
-        <button type="submit">Update</button>
+          <button type="submit">Update</button>
         </div>
-        
+
       </form>
     </div>
   );

@@ -13,6 +13,10 @@ function LoginPage() {
     try {
       const response = await EvaluasiService.login(email, password);
       if (response.token) {
+        if (response.role == 'STUDENT') {
+          alert('Sorry, you are not allowed to access this page');
+          return;
+        }
         localStorage.setItem("token", response.token);
         localStorage.setItem("role", response.role);
         navigate("/exam-management");
@@ -31,24 +35,14 @@ function LoginPage() {
       {error && <p className="error-message">{error}</p>}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <label>Email: </label>
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         </div>
         <div className="form-group">
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <label>Password: </label>
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
-        <button type="submit">Login</button>
+        <button type="login">Login</button>
       </form>
     </div>
   );

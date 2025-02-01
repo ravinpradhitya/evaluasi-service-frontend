@@ -11,13 +11,19 @@ import AddExamQuestionPage from "./components/evaluasipage/AddExamQuestionPage";
 import UpdateExamPage from "./components/evaluasipage/UpdateExamPage";
 import UpdateExamQuestionPage from "./components/evaluasipage/UpdateExamQuestionPage";
 import GradeAnswersPage from "./components/evaluasipage/GradeAnswersPage";
+import EvaluasiService from "./components/service/EvaluasiService";
 
 function App() {
+  const isAuthenticated = EvaluasiService.isAuthenticated();
+
   return (
     <Router>
+      {/* {isAuthenticated && <Navbar />} 
+     {isAuthenticated && <Navbar />}  */}
       <Navbar />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<LoginPage />} />
         <Route path="/profile/" element={<ProfilePage />} />
         <Route path="/exam-management" element={<ExamManagementPage />} />
         <Route path="/exam/:examId/questions" element={<ExamQuestionManagementPage />} />

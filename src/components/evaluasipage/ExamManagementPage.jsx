@@ -11,7 +11,8 @@ function ExamManagementPage() {
 
   const fetchExams = async () => {
     try {
-      const response = await EvaluasiService.getAllExams();
+      const token = localStorage.getItem('token')
+      const response = await EvaluasiService.getAllExams(token);
       setExams(response);
     } catch (error) {
       console.error("Error fetching exams:", error);
@@ -22,7 +23,8 @@ function ExamManagementPage() {
     const confirmDelete = window.confirm("Are you sure you want to delete this exam?");
     if (confirmDelete) {
       try {
-        await EvaluasiService.deleteExam(id);
+        const token = localStorage.getItem('token')
+        await EvaluasiService.deleteExam(id, token);
         alert("Exam deleted successfully.");
         fetchExams(); // Refresh the exam list after deletion
       } catch (error) {
@@ -36,11 +38,11 @@ function ExamManagementPage() {
     <div className="page-container">
       <h2>Exam Management</h2>
       <div className="add-button-container">
-      <button className="add-button">
-        <Link to="/add-exam" style={{ textDecoration: "none" }}>Add Exam</Link>
-      </button>
+        <button className="add-button">
+          <Link to="/add-exam" style={{ textDecoration: "none" }}>Add Exam</Link>
+        </button>
       </div>
-      
+
       <table>
         <thead>
           <tr>
@@ -67,18 +69,18 @@ function ExamManagementPage() {
               <td>
                 <div className="actions-container">
                   <button className="delete-button" onClick={() => deleteExam(exam.id)}>
-                  Delete
+                    Delete
                   </button>
 
                   <button className="update-button">
                     <Link to={`/update-exam/${exam.id}`} style={{ textDecoration: "none" }}>
-                    Update
+                      Update
                     </Link>
                   </button>
 
                   <button className="question-button">
                     <Link to={`/exam/${exam.id}/questions`} style={{ textDecoration: "none" }}>
-                    Questions
+                      Questions
                     </Link>
                   </button>
                 </div>

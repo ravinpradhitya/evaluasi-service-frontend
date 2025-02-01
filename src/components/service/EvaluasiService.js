@@ -6,7 +6,8 @@ class EvaluasiService {
   // Login
   static async login(email, password) {
     try {
-      const response = await axios.post(`${this.BASE_URL}/auth/login`, { email, password });
+      const url = 'http://localhost:8080';
+      const response = await axios.post(`${url}/auth/login`, { email, password });
       return response.data;
     } catch (err) {
       throw err;
@@ -14,9 +15,13 @@ class EvaluasiService {
   }
 
   // Get user profile
-  static async getUserProfile(userId) {
+  static async getUserProfile(userId, token) {
     try {
-      const response = await axios.get(`${EvaluasiService.BASE_URL}/profile/${userId}`);
+      // const response = await axios.get(`${EvaluasiService.BASE_URL}/profile/${userId}`, {
+      const response = await axios.get(`${EvaluasiService.BASE_URL}/users/profile`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      // users/profile
       return response.data;
     } catch (err) {
       throw err;
@@ -24,45 +29,63 @@ class EvaluasiService {
   }
 
   // Exams
-  static async getAllExams() {
+  static async getAllExams(token) {
     try {
-      const response = await axios.get(`${EvaluasiService.BASE_URL}/getAllExams`);
+      const response = await axios.get(`${EvaluasiService.BASE_URL}/getAllExams`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      return response.data;
+    } catch (err) {
+      throw err;
+    }
+  }
+  static logout() {
+    localStorage.removeItem('token')
+    localStorage.removeItem('role')
+  }
+
+  static isAuthenticated() {
+    const token = localStorage.getItem('token')
+    return !!token
+  }
+  static async getExamById(id, token) {
+    try {
+      const response = await axios.get(`${EvaluasiService.BASE_URL}/getExamById/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       return response.data;
     } catch (err) {
       throw err;
     }
   }
 
-  static async getExamById(id) {
+  static async addExam(exam, token) {
     try {
-      const response = await axios.get(`${EvaluasiService.BASE_URL}/getExamById/${id}`);
+      const response = await axios.post(`${EvaluasiService.BASE_URL}/addExam`, exam, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       return response.data;
     } catch (err) {
       throw err;
     }
   }
 
-  static async addExam(exam) {
+  static async updateExam(exam, token) {
     try {
-      const response = await axios.post(`${EvaluasiService.BASE_URL}/addExam`, exam);
+      const response = await axios.put(`${EvaluasiService.BASE_URL}/updateExam`, exam, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       return response.data;
     } catch (err) {
       throw err;
     }
   }
 
-  static async updateExam(exam) {
+  static async deleteExam(id, token) {
     try {
-      const response = await axios.put(`${EvaluasiService.BASE_URL}/updateExam`, exam);
-      return response.data;
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  static async deleteExam(id) {
-    try {
-      const response = await axios.delete(`${EvaluasiService.BASE_URL}/deleteExam/${id}`);
+      const response = await axios.delete(`${EvaluasiService.BASE_URL}/deleteExam/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       return response.data;
     } catch (err) {
       throw err;
@@ -79,41 +102,64 @@ class EvaluasiService {
     }
   }
 
-  static async getExamQuestionById(id) {
+  static async getExamQuestionById(id, token) {
     try {
-      const response = await axios.get(`${EvaluasiService.BASE_URL}/getExamQuestionById/${id}`);
+      const response = await axios.get(`${EvaluasiService.BASE_URL}/getExamQuestionById/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       return response.data;
     } catch (err) {
       throw err;
     }
   }
 
-  static async getQuestionsByExamId(examId) {
-    const response = await axios.get(`${EvaluasiService.BASE_URL}/getQuestionsByExamId/${examId}`);
+  static async getQuestionsByExamId(examId, token) {
+    const response = await axios.get(`${EvaluasiService.BASE_URL}/getQuestionsByExamId/${examId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
     return response.data;
   }
 
-  static async addExamQuestion(question) {
+  static async addExamQuestion(question, token) {
+    // console.log(token);
+
     try {
-      const response = await axios.post(`${EvaluasiService.BASE_URL}/addExamQuestion`, question);
+      const response = await axios.post(`${EvaluasiService.BASE_URL}/addExamQuestion`, question,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
       return response.data;
     } catch (err) {
       throw err;
     }
   }
 
-  static async updateExamQuestion(question) {
+  static async updateExamQuestion(question, token) {
     try {
-      const response = await axios.put(`${EvaluasiService.BASE_URL}/updateExamQuestion`, question);
+      const response = await axios.put(`${EvaluasiService.BASE_URL}/updateExamQuestion`, question, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       return response.data;
     } catch (err) {
       throw err;
     }
   }
 
-  static async deleteExamQuestion(id) {
+  static async deleteExamQuestion(id, token) {
+
     try {
-      const response = await axios.delete(`${EvaluasiService.BASE_URL}/deleteExamQuestion/${id}`);
+      
+      // const response = await axios.delete(`${EvaluasiService.BASE_URL}/deleteExamQuestion/${id}`, {
+      //   headers: { Authorization: `Bearer ${token}` }
+      // });
+      const response = await axios.delete(
+        `${EvaluasiService.BASE_URL}/deleteExamQuestion/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+            "Content-Type": "application/json"
+        }
+      );
       return response.data;
     } catch (err) {
       throw err;
@@ -123,34 +169,39 @@ class EvaluasiService {
   // Answers
   static async getAllAnswers() {
     try {
-        const response = await axios.get(`${EvaluasiService.BASE_URL}/getAllAnswers`);
-        return response.data;
+      const response = await axios.get(`${EvaluasiService.BASE_URL}/getAllAnswers`);
+      return response.data;
     } catch (error) {
-        console.error("Error fetching all answers:", error);
-        throw error;
+      console.error("Error fetching all answers:", error);
+      throw error;
     }
-}
+  }
 
-  static async getAnswersByQuestionId(questionId) {
+  static async getAnswersByQuestionId(questionId, token) {
     try {
-      const response = await axios.get(`${EvaluasiService.BASE_URL}/question/${questionId}`);
+       
+      const response = await axios.get(`${EvaluasiService.BASE_URL}/question/${questionId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       return response.data;
     } catch (err) {
       throw err;
     }
   }
-  
-  static async gradeAnswer(answerId, isCorrect, marks) {
+
+  static async gradeAnswer(answerId, isCorrect, marks, token) {
     try {
       const response = await axios.put(
-        `${EvaluasiService.BASE_URL}/grade/${answerId}?isCorrect=${isCorrect}&marks=${marks}`
+        `${EvaluasiService.BASE_URL}/grade/${answerId}?isCorrect=${isCorrect}&marks=${marks}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      }
       );
       return response.data;
     } catch (err) {
       throw err;
     }
   }
-  
+
 
 }
 

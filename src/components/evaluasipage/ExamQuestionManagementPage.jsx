@@ -15,7 +15,8 @@ function ExamQuestionManagementPage() {
 
   const fetchExamDetails = async () => {
     try {
-      const response = await EvaluasiService.getExamById(examId);
+      const token = localStorage.getItem('token')
+      const response = await EvaluasiService.getExamById(examId, token);
       setExamName(response.examName);
     } catch (error) {
       console.error("Error fetching exam details:", error);
@@ -24,7 +25,8 @@ function ExamQuestionManagementPage() {
 
   const fetchExamQuestions = async () => {
     try {
-      const response = await EvaluasiService.getQuestionsByExamId(examId);
+      const token = localStorage.getItem('item')
+      const response = await EvaluasiService.getQuestionsByExamId(examId, token);
       setExamQuestions(response);
     } catch (error) {
       console.error("Error fetching exam questions:", error);
@@ -37,7 +39,9 @@ function ExamQuestionManagementPage() {
     );
     if (confirmDelete) {
       try {
-        await EvaluasiService.deleteExamQuestion(id);
+        const token = localStorage.getItem('token')
+
+        await EvaluasiService.deleteExamQuestion(id, token);
         alert("Exam question deleted successfully.");
         fetchExamQuestions(); // Refresh the list after deletion
       } catch (error) {
@@ -52,14 +56,14 @@ function ExamQuestionManagementPage() {
       <h2>Manage Questions for Exam: {examName}</h2>
       <div className="add-button-container">
         <button className="back-button">
-        <Link to={`/exam-management/`} style={{ textDecoration: "none" }}>Back</Link>
+          <Link to={`/exam-management/`} style={{ textDecoration: "none" }}>Back</Link>
         </button>
 
         <button className="add-button">
-        <Link to={`/exam/${examId}/add-question`} style={{ textDecoration: "none" }}>Add Exam Question</Link>
+          <Link to={`/exam/${examId}/add-question`} style={{ textDecoration: "none" }}>Add Exam Question</Link>
         </button>
       </div>
-      
+
       <table>
         <thead>
           <tr>
@@ -80,11 +84,11 @@ function ExamQuestionManagementPage() {
               <td>
                 <div className="actions-container">
                   <button className="delete-button" onClick={() => deleteExamQuestion(question.id)}>
-                      Delete
+                    Delete
                   </button>
 
                   <button className="update-button">
-                  <Link to={`/update-exam-question/${question.id}`} style={{ textDecoration: "none" }}>Update</Link>
+                    <Link to={`/update-exam-question/${question.id}`} style={{ textDecoration: "none" }}>Update</Link>
                   </button>
 
                   <button className="grade-button">

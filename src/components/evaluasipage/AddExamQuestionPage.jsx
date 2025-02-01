@@ -18,11 +18,13 @@ function AddExamQuestionPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
+      const token = localStorage.getItem('token')
       await EvaluasiService.addExamQuestion({
         ...question,
         exam: { id: examId },
-      });
+      }, token);
       alert("Question added successfully!");
       navigate(-1);
     } catch (error) {
@@ -53,12 +55,12 @@ function AddExamQuestionPage() {
         </div>
 
         <div className="form-buttons">
-        <button type="button" onClick={handleCancel}>
-          Cancel
-        </button>
-        <button type="submit">Add Question</button>
+          <button type="button" onClick={handleCancel}>
+            Cancel
+          </button>
+          <button type="submit">Add Question</button>
         </div>
-        
+
       </form>
     </div>
   );

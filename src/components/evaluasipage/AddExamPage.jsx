@@ -21,7 +21,8 @@ function AddExamPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await EvaluasiService.addExam(exam);
+      const token = localStorage.getItem('token')
+      await EvaluasiService.addExam(exam, token);
       alert("Exam added successfully!");
       navigate("/exam-management");
     } catch (error) {
@@ -63,12 +64,12 @@ function AddExamPage() {
         </div>
 
         <div className="form-buttons">
-        <button type="button" onClick={handleCancel}>
+          <button type="button" onClick={handleCancel}>
             Cancel
-        </button>
-        <button type="submit">Add Exam</button>
+          </button>
+          <button type="submit">Add Exam</button>
         </div>
-        
+
       </form>
     </div>
   );
