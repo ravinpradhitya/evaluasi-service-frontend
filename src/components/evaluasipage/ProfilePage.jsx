@@ -30,6 +30,7 @@ function ProfilePage({ userId }) {
   return (
     <div className="profile-page-container">
       <h2>Profile Information</h2>
+      <p>ID: {profile.id}</p>
       <p>Name: {profile.name}</p>
       <p>Email: {profile.email}</p>
       <p>Role: {profile.role}</p>
